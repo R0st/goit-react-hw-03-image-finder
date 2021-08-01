@@ -2,14 +2,24 @@ import { Component } from "react";
 // import { ToastContainer } from 'react-toastify';
 import Searchbar from './components/Searchbar'
 import ImageGallery from "./components/ImageGallery";
-// import ImageGalleryItem from './components/ImageGalleryItem'
-// import All from './components/All'
-// import Button from './components/Button'
-// import Loader from '../Loader'
-import searchApi from '../src/components/searchApi'
+import Button from './components/Button'
+import Loader from './components/Loader'
+import searchApi from './components/searchApi'
+import Modal from './components/Modal'
+import PropTypes from 'prop-types';
+
 
 export default class App extends Component {
-   
+   static propTypes = {
+        hits: PropTypes.array,
+        searchQuery: PropTypes.string,
+        currentPage: PropTypes.number,
+        isLoading: PropTypes.bool,
+        showModal: PropTypes.bool,
+        largeImageURL: PropTypes.string,
+        tags: PropTypes.string,
+        error: PropTypes.string,
+  }
     state = {
         hits: [],
         searchQuery: '',
@@ -17,7 +27,8 @@ export default class App extends Component {
         isLoading: false,
         error: null,
         showModal: false,
-
+        largeImageURL: '',
+        tags: '',
     }
 
     toogleModal = () => {
@@ -32,23 +43,34 @@ export default class App extends Component {
     };
   
     handleSearchSubmit = query => {
-        this.setState({searchQuery: query, currentPage: 1, hits: [], error: null});
+        this.setState({
+            searchQuery: query,
+            currentPage: 1,
+            hits: [],
+            error: null,
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.searchQuery !== this.state.searchQuery) {
         this.fetchHits();
         }
+        if (this.state.searchQuery !== 2 && prevState.currentPage !== this.state.currentPage) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    };
     }
 
-    onChangeQuery = query => {
-        this.setState({
-        searchQuery: query,
-        currentPage: 1,
-        articles: [],
-        error: null,
-        });
-    };
+    // onChangeQuery = query => {
+    //     this.setState({
+    //     searchQuery: query,
+    //     currentPage: 1,
+    //     articles: [],
+    //     error: null,
+    //     });
+    // };
 
     // fetchHits = () => {
     //     const { currentPage, searchQuery } = this.state;
@@ -67,6 +89,7 @@ export default class App extends Component {
     //     .catch(error => this.setState({ error }))
     //     .finally(() => this.setState({ isLoading: false }));
     // };
+
     fetchHits = () => {
     const { searchQuery, currentPage } = this.state;
 
@@ -86,30 +109,29 @@ export default class App extends Component {
       })
       .catch(error => this.setState({ error: 'Sorry! Picture not found. Please try again later!!!' }))
       .finally(() => this.setState({ isLoading: false }));
-
   }
 
     render() {
-        const { hits } = this.state;
+        const { hits, isLoading, showModal,largeImageURL,tags } = this.state;
         return (
-            // <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
              <>   
                 <Searchbar onSubmit={this.handleSearchSubmit} />
                 <ImageGallery hits={hits}  onOpenModal={this.onOpenModal} />
-             {/* </div> */}
+                
+                {isLoading && <Loader />}
+
+                {hits.length > 11 && !isLoading && (
+                <Button onClick={this.fetchHits} />
+                )}
+          
+                {showModal && (
+                <Modal onClose = {this.onOpenModal}>
+                <img src={largeImageURL} alt={tags} />
+            {/* <button type="button" onClick={this.toogleModal}>Close</button> */}
+                </Modal>
+                    )   
+                }
             </>
         )
     }
 }
-
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevProps.pokemonName !== this.props.pokemonName) {
-    //         // console.log('prevProps.imageGalleryItem', prevProps.pokemonName);
-    //         // console.log('this.props.imageGalleryItem: ', this.props.pokemonName);
-            
-    //         this.setState({status: 'pending'})
-    //         searchAPI.fetchIm(this.props.pokemonName)
-    //             .then(pokemon => this.setState({ pokemon, status: 'resolved' }))
-    //             .catch(error=> this.setState({error, status: 'rejected'}))
-    //     }
-    // }

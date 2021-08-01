@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
-import style from './Modal.module.css'
+import '../../style.css';
 
 const modalRoot = document.querySelector('#modal-root');
-
 
 export default class Modal extends Component {
     componentDidMount() {
@@ -14,7 +13,6 @@ export default class Modal extends Component {
     componentWillUnmount() {
         console.log('Modal componentWillUnmount');
         window.removeEventListener('keydown', this.handleKeyDown);
-
     }
 
     handleKeyDown = e => {
@@ -36,8 +34,8 @@ export default class Modal extends Component {
     }
     render() {
         return createPortal(
-            <div className={style.Overlay} onClick={this.handleBackdropClick}>
-            <div className={style.Modal}>{this.props.children}</div>
+            <div className="Overlay" onClick={this.handleBackdropClick}>
+            <div className="Modal">{this.props.children}</div>
             </div>,
             modalRoot,
         );
