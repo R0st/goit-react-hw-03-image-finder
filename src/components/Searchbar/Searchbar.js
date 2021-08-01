@@ -4,30 +4,30 @@ import PropTypes from 'prop-types';
 
 export default class Searchbar extends Component {
     static propTypes = {
-        searchQuery: PropTypes.string,
+        query: PropTypes.string,
     };
     
     state = {
-        searchQuery: '',
+        query: '',
     };
 
     handleChange = e => {
-        this.setState({ searchQuery: e.currentTarget.value });
+        this.setState({ query: e.currentTarget.value });
     };
 
     handleSubmit = e => {
         e.preventDefault();
 
-        if (this.state.searchQuery.trim() === '') {
+        if (this.state.query.trim() === '') {
             alert('Введите название картинки');
             return;
         } 
-        this.props.onHandleSearchSubmit(this.state.searchQuery);
-        this.setState({ searchQuery: '' });
+        this.props.onSubmit(this.state.query);
+        this.setState({ query: '' });
     };
 
     render() {
-        const { searchQuery } = this.state;
+        const { query } = this.state;
         return (
             <header className="Searchbar" >
                 <form className="SearchForm" onSubmit={this.handleSubmit}>
@@ -38,16 +38,14 @@ export default class Searchbar extends Component {
                     <input
                         className="SearchForm-input"
                         type="text"
-                        autocomplete="off"
-                        autofocus
+                        autoComplete="off"
+                        autoFocus
                         placeholder="Search images and photos"
-                        value={searchQuery}
+                        value={query}
                         onChange={this.handleChange}
                     />
                 </form>
             </header>
-
         )
     }
-
 }

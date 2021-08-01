@@ -1,21 +1,40 @@
-function fetchIm(name) {
+// import searchApi from '../components/searchApi' 
 
-        const BASE_URL = 'https://pixabay.com/api/';
-        const API_KEY = '21793767-b218360da72fb262d25a858fe';
-        const PER_PAGE = 12;
+// function fetchImg({ searchQuery = "", currentPage = 1 }) {
+
+        // const BASE_URL = 'https://pixabay.com/api/';
+        // const API_KEY = '21793767-b218360da72fb262d25a858fe';
+        // const PER_PAGE = 12;
     
-    return fetch(`${BASE_URL}?image_type=photo&orientation=horizontal&q=${this.searchQuery}&page=
-                      ${this.page}&per_page=${PER_PAGE}&key=${API_KEY}`)
+//     return fetch(`${BASE_URL}?image_type=photo&orientation=horizontal&q=${searchQuery}&page=
+//                       ${currentPage}&per_page=${PER_PAGE}&key=${API_KEY}`)
                 
-                .then(response => {
-                    if (response.ok) {
-                        return response.json()
-                    }
-                    return Promise.reject(
-                        new Error(`Повторите запрос ${name}`))
-                })
+//                 .then(response => {
+//                     if (response.ok) {
+//                         return response.json()
+//                     }
+//                     return Promise.reject(
+//                         new Error(`Повторите запрос ${searchQuery}`))
+//                 })
+// }
+// const api = {
+//     fetchImg}
+// export default  api ;
+// export default { fetchImg } ;
+
+import axios from 'axios';
+
+
+const fetchHits = ({ searchQuery = '', currentPage = 1 }) => {
+    const BASE_URL = 'https://pixabay.com/api/';
+const API_KEY = '21793767-b218360da72fb262d25a858fe';
+const PER_PAGE = 12;
+    return axios
+        .get(
+        `${BASE_URL}?image_type=photo&orientation=horizontal&q=${searchQuery}&page=
+//                       ${currentPage}&per_page=${PER_PAGE}&key=${API_KEY}`,
+    )
+    .then(response =>response.data.hits)
 }
-const api = {
-    fetchIm,
-}
-export default  api ;
+
+export default fetchHits;
