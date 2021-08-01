@@ -1,40 +1,52 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 // import { ImSearch } from 'react-icon/im';
 
-export default class CardPix extends Component {
+export default class Searchbar extends Component {
+    static propTypes = {
+        searchQuery: PropTypes.string,
+    };
+    
     state = {
-        pokemonName: '',
+        searchQuery: '',
     };
 
-    hadnleNameChange = e => {
-        this.setState({ pokemonName: e.currentTarget.value.toLowerCase() });
+    handleChange = e => {
+        this.setState({ searchQuery: e.currentTarget.value });
     };
 
     handleSubmit = e => {
         e.preventDefault();
 
-        if (this.state.pokemonName.trim() === '') {
-            alert('Введите имя покемона');
+        if (this.state.searchQuery.trim() === '') {
+            alert('Введите название картинки');
             return;
         } 
-        this.props.onHandleSearchSubmit(this.state.pokemonName);
-        this.setState({ pokemonName: '' });
+        this.props.onHandleSearchSubmit(this.state.searchQuery);
+        this.setState({ searchQuery: '' });
     };
 
     render() {
+        const { searchQuery } = this.state;
         return (
-            <form onSubmit={this.handleSubmit} >
-                <input
-                    type="text"
-                    name="pokemonName"
-                    value={this.state.pokemonName}
-                    onChange={this.hadnleNameChange}
-                />
-                <button type="submit">
-                    {/* <ImSearch /> */}
-                    Найти
-                </button>
-            </form>
+            <header className="Searchbar" >
+                <form className="SearchForm" onSubmit={this.handleSubmit}>
+                    <button type="submit" className="SearchForm-button">
+                        <span className="SearchForm-button-label">Search</span>
+                    </button>
+
+                    <input
+                        className="SearchForm-input"
+                        type="text"
+                        autocomplete="off"
+                        autofocus
+                        placeholder="Search images and photos"
+                        value={searchQuery}
+                        onChange={this.handleChange}
+                    />
+                </form>
+            </header>
+
         )
     }
 
